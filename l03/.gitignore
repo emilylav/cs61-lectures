@@ -1,5 +1,7 @@
 mexplore
 add
 ubexplore
+badmem
+badmem[1-9]
 *.noopt
 *.opt
