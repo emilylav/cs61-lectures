@@ -1,5 +1,4 @@
-PROGRAMS = mexplore ubexplore.noopt ubexplore.opt \
-	badmem badmem2 badmem3
+PROGRAMS = mexplore ubexplore.noopt ubexplore.opt
 all: $(PROGRAMS)
 
 O = 0
@@ -16,7 +15,7 @@ include ../common/rules.mk
 %.noopt.o: %.c $(BUILDSTAMP)
 	$(CC) $(DEPCFLAGS) $(CPPFLAGS) $(CFLAGS) -O0 -o $@ -c $<
 
-mexplore badmem badmem2 badmem3: %: %.o allowexec.o hexdump.o
+mexplore: %: %.o allowexec.o hexdump.o
 	$(CC) $(CFLAGS) -O0 -o $@ $^
 
 ubexplore.noopt: %.noopt: %.noopt.o allowexec.o hexdump.o

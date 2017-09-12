@@ -1,0 +1,9 @@
+mexplore
+add
+ubexplore
+ubexplore2
+badmem
+badmem[1-9]
+*.noopt
+*.opt
+*.wrapv
