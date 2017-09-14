@@ -58,9 +58,5 @@ void m61_print_allocations(void) {
     }
 }
 
-void m61_find_allocations(char* base, size_t sz) {
-    (void) base, (void) sz;
-}
-
 void m61_cleanup(void) {
 }
