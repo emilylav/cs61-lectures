@@ -1,0 +1,9 @@
+*.noopt
+*.opt
+*.unsafe
+membench-*
+testgc
+testgc-[0-9][0-9]
+mallocbench
+mallocbench-full
+mallocbench-[0-9][0-9]
