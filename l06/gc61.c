@@ -6,7 +6,7 @@
 #include <assert.h>
 
 typedef struct mblock {
-    uintptr_t ptr;
+    uintptr_t addr;
     size_t sz;
 } mblock;
 
@@ -23,7 +23,7 @@ void* m61_malloc(size_t sz) {
                 realloc(blocks, sizeof(mblock) * blocks_capacity);
             assert(blocks);
         }
-        blocks[nblocks].ptr = (uintptr_t) ptr;
+        blocks[nblocks].addr = (uintptr_t) ptr;
         blocks[nblocks].sz = sz;
         ++nblocks;
     }
@@ -34,7 +34,8 @@ void m61_free(void* ptr) {
     free(ptr);
 }
 
-void m61_print_allocations(void) {
+void m61_print_allocations(FILE* f) {
+    (void) f;
 }
 
 void m61_cleanup(void) {

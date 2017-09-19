@@ -6,7 +6,7 @@
 #include <assert.h>
 
 typedef struct mblock {
-    uintptr_t ptr;
+    uintptr_t addr;
     size_t sz;
 } mblock;
 
@@ -24,7 +24,7 @@ void* m61_malloc(size_t sz) {
                 realloc(blocks, sizeof(mblock) * blocks_capacity);
             assert(blocks);
         }
-        blocks[nblocks].ptr = (uintptr_t) ptr;
+        blocks[nblocks].addr = (uintptr_t) ptr;
         blocks[nblocks].sz = sz;
         ++nblocks;
     }
@@ -32,9 +32,10 @@ void* m61_malloc(size_t sz) {
 }
 
 static mblock* m61_find(void* ptr) {
+    uintptr_t addr = (uintptr_t) ptr;
     for (size_t i = 0; i != nblocks; ++i) {
-        if ((uintptr_t) ptr >= blocks[i].ptr
-            && (uintptr_t) ptr < blocks[i].ptr + blocks[i].sz) {
+        if (addr >= blocks[i].addr
+            && addr < blocks[i].addr + blocks[i].sz) {
             return &blocks[i];
         }
     }
@@ -44,17 +45,34 @@ static mblock* m61_find(void* ptr) {
 void m61_free(void* ptr) {
     if (ptr) {
         mblock* m = m61_find(ptr);
-        assert(m && m->ptr == (uintptr_t) ptr);
+        assert(m && m->addr == (uintptr_t) ptr);
         *m = blocks[nblocks - 1];
         --nblocks;
     }
     free(ptr);
 }
 
-void m61_print_allocations(void) {
+void m61_print_allocations(FILE* f) {
     for (size_t i = 0; i != nblocks; ++i) {
-        fprintf(stderr, "%p: allocated object with size %zu\n",
-                (void*) blocks[i].ptr, blocks[i].sz);
+        fprintf(f, "%p+%zu\n", (void*) blocks[i].addr, blocks[i].sz);
+    }
+}
+
+void m61_snoop_memory(char* base, size_t sz) {
+    if (sz < sizeof(void*)
+        || (uintptr_t) base + sz < (uintptr_t) base) {
+        return;
+    }
+    for (size_t i = 0; i <= sz - sizeof(void*); i += sizeof(void*)) {
+        void* possible_ptr;
+        memcpy(&possible_ptr, &base[i], sizeof(possible_ptr));
+        mblock* m = m61_find(possible_ptr);
+        if (m) {
+            printf("%p: found heap pointer %p\n",
+                   &base[i], possible_ptr);
+            printf(" pointer is %zu bytes into object %p+%zu\n",
+                   (uintptr_t) possible_ptr - m->addr, (void*) m->addr, m->sz);
+        }
     }
 }
 

@@ -1,6 +1,4 @@
-TESTGC_PROGRAMS = $(patsubst gc61%.c,testgc%,$(wildcard gc61*.c))
-PROGRAMS = mallocbench mallocbench-01 mallocbench-02 mallocbench-03 \
-	$(TESTGC_PROGRAMS)
+PROGRAMS = mallocbench mallocbench-01 mallocbench-02 mallocbench-03
 
 all: $(PROGRAMS)
 
@@ -22,14 +20,6 @@ UNSAFE_CFLAGS := $(CFLAGS) -U_FORTIFY_SOURCE -fno-stack-protector
 
 mallocbench mallocbench-01 mallocbench-02 mallocbench-03: \
 %: %.o
-	$(CC) $(CFLAGS) $(O) -o $@ $^
-
-testgc: testgc.noopt.o gc61.o
-	$(CC) $(CFLAGS) $(O) -o $@ $^
-
-.SECONDEXPANSION:
-find_testgc_o = $(patsubst %.c,%.noopt.o,$(wordlist 1,1,$(wildcard echo $(1) testgc.c)))
-testgc-%: $$(call find_testgc_o,testgc-$$*.c) gc61-%.c
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
 
