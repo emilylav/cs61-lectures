@@ -29,6 +29,9 @@ UNSAFE_CFLAGS := $(CFLAGS) -U_FORTIFY_SOURCE -fno-stack-protector
 testgc: testgc.noopt.o gc61.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
+testgc-class: testgc-class.noopt.o gc61-class.o
+	$(CC) $(CFLAGS) $(O) -o $@ $^
+
 .SECONDEXPANSION:
 find_testgc_o = $(patsubst %.c,%.noopt.o,$(wordlist 1,1,$(wildcard echo $(1) testgc.c)))
 testgc-%: $$(call find_testgc_o,testgc-$$*.c) gc61-%.c
