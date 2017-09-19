@@ -1,5 +1,5 @@
 	.text
-	.file	"f11.c"
+	.file	"f20.c"
 	.globl	or
 	.align	16, 0x90
 	.type	or,@function

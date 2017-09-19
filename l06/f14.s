@@ -1,5 +1,5 @@
 	.text
-	.file	"f10.c"
+	.file	"f14.c"
 	.globl	sum
 	.align	16, 0x90
 	.type	sum,@function

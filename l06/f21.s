@@ -1,5 +1,5 @@
 	.text
-	.file	"f12.c"
+	.file	"f21.c"
 	.globl	xor
 	.align	16, 0x90
 	.type	xor,@function

@@ -1,5 +1,5 @@
 	.text
-	.file	"f13.c"
+	.file	"f22.c"
 	.globl	not
 	.align	16, 0x90
 	.type	not,@function

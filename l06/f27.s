@@ -1,5 +1,5 @@
 	.text
-	.file	"f26.c"
+	.file	"f27.c"
 	.globl	func1
 	.align	16, 0x90
 	.type	func1,@function

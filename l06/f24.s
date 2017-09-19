@@ -1,5 +1,5 @@
 	.text
-	.file	"f15.c"
+	.file	"f24.c"
 	.globl	mul
 	.align	16, 0x90
 	.type	mul,@function
