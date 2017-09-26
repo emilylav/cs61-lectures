@@ -1,10 +1,10 @@
 	.text
-	.file	"f56.c"
+	.file	"f58.c"
 	.globl	f
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	movl	$1, %eax
+	xorl	%eax, %eax
 	testl	%edi, %edi
 	jle	.LBB0_2
 	.align	16, 0x90

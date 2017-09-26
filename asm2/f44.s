@@ -6,7 +6,7 @@
 f:                                      # @f
 	movslq	x(%rip), %rax
 	movq	a(%rip), %rcx
-	movl	(%rcx,%rax,4), %eax
+	movzbl	(%rcx,%rax), %eax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

@@ -4,9 +4,12 @@
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	cmpl	%esi, %edi
-	cmovgel	%edi, %esi
-	movl	%esi, %eax
+	cmpl	$0, x(%rip)
+	je	.LBB0_1
+	movl	a(%rip), %eax
+	retq
+.LBB0_1:
+	movl	b(%rip), %eax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

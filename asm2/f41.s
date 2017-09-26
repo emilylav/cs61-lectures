@@ -4,8 +4,15 @@
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	movq	a(%rip), %rax
-	movsbl	(%rax), %eax
+	xorl	%eax, %eax
+	testl	%edi, %edi
+	je	.LBB0_2
+	leal	-1(%rdi), %eax
+	leal	-2(%rdi), %ecx
+	imulq	%rax, %rcx
+	shrq	%rcx
+	leal	-1(%rcx,%rdi), %eax
+.LBB0_2:                                # %._crit_edge
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

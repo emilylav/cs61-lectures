@@ -1,14 +1,11 @@
 	.text
-	.file	"f15.c"
+	.file	"f16.c"
 	.globl	sum
 	.align	16, 0x90
 	.type	sum,@function
 sum:                                    # @sum
-	movl	%edi, -4(%rsp)
-	movl	%esi, -8(%rsp)
-	movl	-4(%rsp), %esi
-	addl	-8(%rsp), %esi
-	movl	%esi, %eax
+	movl	b(%rip), %eax
+	addl	a+4(%rip), %eax
 	retq
 .Lfunc_end0:
 	.size	sum, .Lfunc_end0-sum

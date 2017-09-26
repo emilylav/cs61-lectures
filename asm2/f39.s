@@ -4,15 +4,18 @@
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	xorl	%eax, %eax
-	testl	%edi, %edi
-	je	.LBB0_2
-	leal	-1(%rdi), %eax
-	leal	-2(%rdi), %ecx
-	imulq	%rax, %rcx
-	shrq	%rcx
-	leal	-1(%rcx,%rdi), %eax
-.LBB0_2:                                # %._crit_edge
+	cmpl	%esi, %edi
+	jl	.LBB0_2
+	cmpl	%edx, %edi
+	jl	.LBB0_2
+	movl	%edi, %eax
+	retq
+.LBB0_2:
+	cmpl	%edx, %esi
+	movl	%esi, %eax
+	cmovll	%edx, %eax
+	cmpl	%edi, %esi
+	cmovll	%edx, %eax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

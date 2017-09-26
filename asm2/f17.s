@@ -1,17 +1,17 @@
 	.text
 	.file	"f17.c"
-	.globl	f
+	.globl	sum
 	.align	16, 0x90
-	.type	f,@function
-f:                                      # @f
-	imull	$1000, %edi, %eax       # imm = 0x3E8
-	imull	$-10000, %esi, %ecx     # imm = 0xFFFFFFFFFFFFD8F0
-	addl	%eax, %ecx
-	imull	$-100000, %edx, %eax    # imm = 0xFFFFFFFFFFFE7960
-	addl	%ecx, %eax
+	.type	sum,@function
+sum:                                    # @sum
+	movl	%edi, -4(%rsp)
+	movl	%esi, -8(%rsp)
+	movl	-4(%rsp), %esi
+	addl	-8(%rsp), %esi
+	movl	%esi, %eax
 	retq
 .Lfunc_end0:
-	.size	f, .Lfunc_end0-f
+	.size	sum, .Lfunc_end0-sum
 
 
 	.ident	"clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)"

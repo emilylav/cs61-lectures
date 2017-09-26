@@ -4,17 +4,9 @@
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	xorl	%eax, %eax
-	testl	%esi, %esi
-	jle	.LBB0_2
-	.align	16, 0x90
-.LBB0_1:                                # %.lr.ph
-	movslq	(%rdi), %rcx
-	addq	%rcx, %rax
-	addq	$4, %rdi
-	decl	%esi
-	jne	.LBB0_1
-.LBB0_2:                                # %._crit_edge
+	movslq	x(%rip), %rax
+	movq	a(%rip), %rcx
+	leaq	3(%rcx,%rax,4), %rax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

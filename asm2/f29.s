@@ -4,12 +4,8 @@
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	pushq	%rax
-.Ltmp0:
-	incl	%edi
-	callq	g
-	decl	%eax
-	popq	%rcx
+	subq	%rsi, %rdi
+	leaq	(%rdi,%rcx), %rax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

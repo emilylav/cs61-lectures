@@ -1,15 +1,14 @@
 	.text
 	.file	"f22.c"
-	.globl	f
+	.globl	xor
 	.align	16, 0x90
-	.type	f,@function
-f:                                      # @f
-	shlq	$20, %rdi
-	imulq	%rdx, %rsi
-	leaq	(%rsi,%rdi), %rax
+	.type	xor,@function
+xor:                                    # @xor
+	xorl	%esi, %edi
+	movl	%edi, %eax
 	retq
 .Lfunc_end0:
-	.size	f, .Lfunc_end0-f
+	.size	xor, .Lfunc_end0-xor
 
 
 	.ident	"clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)"

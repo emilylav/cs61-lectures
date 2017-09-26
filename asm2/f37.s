@@ -5,17 +5,8 @@
 	.type	f,@function
 f:                                      # @f
 	cmpl	%esi, %edi
-	jl	.LBB0_2
-	cmpl	%edx, %edi
-	jl	.LBB0_2
-	movl	%edi, %eax
-	retq
-.LBB0_2:
-	cmpl	%edx, %esi
+	cmovgel	%edi, %esi
 	movl	%esi, %eax
-	cmovll	%edx, %eax
-	cmpl	%edi, %esi
-	cmovll	%edx, %eax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

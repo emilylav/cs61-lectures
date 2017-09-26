@@ -1,14 +1,14 @@
 	.text
 	.file	"f21.c"
-	.globl	not
+	.globl	or
 	.align	16, 0x90
-	.type	not,@function
-not:                                    # @not
-	notl	%edi
+	.type	or,@function
+or:                                     # @or
+	orl	%esi, %edi
 	movl	%edi, %eax
 	retq
 .Lfunc_end0:
-	.size	not, .Lfunc_end0-not
+	.size	or, .Lfunc_end0-or
 
 
 	.ident	"clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)"

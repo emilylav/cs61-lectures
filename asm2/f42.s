@@ -4,9 +4,8 @@
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	movslq	x(%rip), %rax
-	movq	a(%rip), %rcx
-	movzbl	(%rcx,%rax), %eax
+	movq	a(%rip), %rax
+	movl	(%rax), %eax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

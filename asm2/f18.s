@@ -1,15 +1,13 @@
 	.text
 	.file	"f18.c"
-	.globl	f
+	.globl	sum
 	.align	16, 0x90
-	.type	f,@function
-f:                                      # @f
-	imull	$1000, %edi, %eax       # imm = 0x3E8
-	imull	%edx, %esi
-	addl	%esi, %eax
+	.type	sum,@function
+sum:                                    # @sum
+	leal	(%rdi,%rsi), %eax
 	retq
 .Lfunc_end0:
-	.size	f, .Lfunc_end0-f
+	.size	sum, .Lfunc_end0-sum
 
 
 	.ident	"clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)"

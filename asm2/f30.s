@@ -4,8 +4,15 @@
 	.align	16, 0x90
 	.type	f,@function
 f:                                      # @f
-	incl	%edi
-	jmp	g                       # TAILCALL
+	pushq	%rax
+.Ltmp0:
+	movl	%edi, 4(%rsp)
+	movl	4(%rsp), %edi
+	addl	$1, %edi
+	callq	g
+	subl	$1, %eax
+	popq	%rcx
+	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f
 

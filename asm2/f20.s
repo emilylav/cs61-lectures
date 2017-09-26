@@ -1,14 +1,15 @@
 	.text
 	.file	"f20.c"
-	.globl	xor
+	.globl	f
 	.align	16, 0x90
-	.type	xor,@function
-xor:                                    # @xor
-	xorl	%esi, %edi
-	movl	%edi, %eax
+	.type	f,@function
+f:                                      # @f
+	imull	$1000, %edi, %eax       # imm = 0x3E8
+	imull	%edx, %esi
+	addl	%esi, %eax
 	retq
 .Lfunc_end0:
-	.size	xor, .Lfunc_end0-xor
+	.size	f, .Lfunc_end0-f
 
 
 	.ident	"clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)"

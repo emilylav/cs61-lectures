@@ -5,7 +5,7 @@
 	.type	f,@function
 f:                                      # @f
 	subq	%rsi, %rdi
-	leaq	(%rdi,%rcx), %rax
+	movq	%rdi, %rax
 	retq
 .Lfunc_end0:
 	.size	f, .Lfunc_end0-f

@@ -1,10 +1,11 @@
 	.text
-	.file	"f16.c"
+	.file	"f15.c"
 	.globl	sum
 	.align	16, 0x90
 	.type	sum,@function
 sum:                                    # @sum
-	leal	(%rdi,%rsi), %eax
+	movl	b(%rip), %eax
+	addl	a(%rip), %eax
 	retq
 .Lfunc_end0:
 	.size	sum, .Lfunc_end0-sum
