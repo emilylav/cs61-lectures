@@ -47,6 +47,10 @@ $(ASM_PROGRAMS): %: %.s
 	  if test -z "$$ARGS"; then ARGS="$(DEFAULT_ASM_CFLAGS)"; fi; \
 	  $(call xrun,$(CC) $$CFLAGS $$ARGS -o $@ $<,ASSEMBLE $@)
 
+
+evil.o: evil.c GNUmakefile
+	$(CC) $(CFLAGS) -Os -ffreestanding -c -o $@ $<
+
 allfc.txt: $(wildcard f*.c) always
 	for i in f*.c; do echo $$i; echo ========; cat $$i; echo; echo; done > allfc.txt
 
