@@ -4,7 +4,7 @@ ASM_PROGRAMS := $(shell grep -l main $(wildcard f[0-9][0-9].[cs]) | sed 's,\.[cs
 DEFAULT_ASM_CFLAGS = -O1
 DEFAULT_ASM_CFLAGS_DEBUG = -g $(DEFAULT_ASM_CFLAGS)
 
-PROGRAMS = $(ASM_PROGRAMS) addin
+PROGRAMS = $(ASM_PROGRAMS) add addin
 
 all: $(ASMS) $(PROGRAMS)
 
@@ -24,6 +24,9 @@ UNSAFE_CFLAGS := $(CFLAGS) -U_FORTIFY_SOURCE -fno-stack-protector
 %.unsafe.o: %.c $(BUILDSTAMP)
 	$(CC) $(UNSAFE_CFLAGS) $(DEPCFLAGS) $(O) -o $@ -c $<
 
+
+add: add.o hexdump.o
+	$(CC) $(CFLAGS) $(O) -o $@ $^
 
 addin: addin.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
