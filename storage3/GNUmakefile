@@ -1,4 +1,4 @@
-PROGRAMS = $(sort $(patsubst %.c,%,$(wildcard [rw][0-9]*.c)))
+PROGRAMS = $(sort $(patsubst %.c,%,$(wildcard [rw][0-9]*.c))) coherence
 
 -include conf.mk
 ifndef DATAFILE
@@ -20,6 +20,9 @@ r%: r%.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
 w%: w%.o
+	$(CC) $(CFLAGS) $(O) -o $@ $^
+
+coherence: coherence.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
 DATASIZE := $(shell wc -c $(DATAFILE) | awk '{ print $$1 }')

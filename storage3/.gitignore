@@ -2,6 +2,7 @@ data
 *.blktrace.[0-9]
 *.blktrace.[0-9][0-9]
 *.blktrace.[0-9][0-9][0-9]
+coherence
 [rw][0-9][0-9]-directsector
 [rw][0-9][0-9]-sector
 [rw][0-9][0-9]-block
