@@ -1,4 +1,5 @@
-PROGRAMS = $(sort $(patsubst %.c,%,$(wildcard [rw][0-9]*.c))) coherence
+PROGRAMS = $(sort $(patsubst %.c,%,$(wildcard [rw][0-9]*.c))) \
+	coherence matrixmultiply base-matrixmultiply
 
 -include conf.mk
 ifndef DATAFILE
@@ -23,6 +24,12 @@ w%: w%.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
 coherence: coherence.o
+	$(CC) $(CFLAGS) $(O) -o $@ $^
+
+matrixmultiply: matrixmultiply.o
+	$(CC) $(CFLAGS) $(O) -o $@ $^
+
+base-matrixmultiply: base-matrixmultiply.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
 DATASIZE := $(shell wc -c $(DATAFILE) | awk '{ print $$1 }')

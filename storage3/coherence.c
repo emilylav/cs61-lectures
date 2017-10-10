@@ -46,7 +46,7 @@ void read_using_syscalls(void) {
 
     nr = read(fd, buf, BUFSIZ);
     fwrite(buf, 1, nr, stdout);
-    
+
     close(fd);
 }
 
