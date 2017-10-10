@@ -13,10 +13,13 @@ base-matrixmultiply
 [rw][0-9][0-9]-directblock
 [rw][0-9][0-9]-mmapblock
 [rw][0-9][0-9]-mmapbyte
+[rw][0-9][0-9]-mmapsector
 [rw][0-9][0-9]-mmapstridebyte
 [rw][0-9][0-9]-multistdiostridebyte
 [rw][0-9][0-9]-revblock
 [rw][0-9][0-9]-revbyte
+[rw][0-9][0-9]-stdioskip
+[rw][0-9][0-9]-stdioadviseskip
 [rw][0-9][0-9]-stdioadviseendsbyte
 [rw][0-9][0-9]-stdioblock
 [rw][0-9][0-9]-stdiobyte

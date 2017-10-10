@@ -34,13 +34,18 @@ base-matrixmultiply: base-matrixmultiply.o
 
 DATASIZE := $(shell wc -c $(DATAFILE) | awk '{ print $$1 }')
 DATADEP := $(shell if test $(DATASIZE) -lt 51200000; then echo always; fi)
+DATADEP_LARGE := $(shell if test $(DATASIZE) -lt 5120000000; then echo always; fi)
 
 $(DATAFILE): $(DATADEP)
 	yes 77777777777777777777777777777777777777777 | tr -d '\n' | head -c 51200000 > $@
 
+$(DATAFILE)-large: $(DATADEP_LARGE)
+	yes 77777777777777777777777777777777777777777 | tr -d '\n' | head -c 5120000000 > $@
+
 ifneq ($(DATAFILE),data)
 data: $(DATAFILE)
-.PHONY: data
+data-large: $(DATAFILE)-large
+.PHONY: data data-large
 endif
 
 
@@ -55,3 +60,4 @@ cold:
 	sudo blockdev --flushbufs `df $(DATAFILE) | grep /dev | awk '{ print $$1 }'`
 
 .PHONY: all always clean cold
+.PRECIOUS: $(DATAFILE) $(DATAFILE)-large
