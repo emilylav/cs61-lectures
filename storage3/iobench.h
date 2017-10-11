@@ -21,8 +21,13 @@ static inline double tstamp(void) {
 
 // Print a report to stderr of # bytes printed, elapsed time, and rate.
 static inline void report(size_t n, double elapsed) {
-    fprintf(stderr, "\r%zd bytes   %.3f sec   %g byte/sec     ",
-            n, elapsed, n / elapsed);
+    static size_t last_printed = 0;
+    size_t printed = fprintf(stderr, "\r%zd bytes   %.3f sec   %g byte/sec",
+                             n, elapsed, n / elapsed);
+    if (printed < last_printed) {
+        fprintf(stderr, "%.*s", (int) (last_printed - printed), "");
+    }
+    last_printed = printed;
 }
 
 // Return the size of a file.
