@@ -22,7 +22,7 @@ r%: r%.o
 w%: w%.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
-DATASIZE := $(shell wc -c $(DATAFILE) | awk '{ print $$1 }')
+DATASIZE := $(shell cat $(DATAFILE) 2>/dev/null | wc -c | awk '{ print $$1 }')
 DATADEP := $(shell if test $(DATASIZE) -lt 51200000; then echo always; fi)
 
 $(DATAFILE): $(DATADEP)

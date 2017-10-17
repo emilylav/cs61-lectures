@@ -12,6 +12,7 @@ coherence
 [rw][0-9][0-9]-mmapblock
 [rw][0-9][0-9]-mmapbyte
 [rw][0-9][0-9]-mmapsector
+[rw][0-9][0-9]-mmapstrideblock
 [rw][0-9][0-9]-mmapstridebyte
 [rw][0-9][0-9]-multistdiostridebyte
 [rw][0-9][0-9]-revblock
@@ -24,6 +25,7 @@ coherence
 [rw][0-9][0-9]-stdioendsbyte
 [rw][0-9][0-9]-stdiorevblock
 [rw][0-9][0-9]-stdiorevbyte
+[rw][0-9][0-9]-stdioskipbyte
 [rw][0-9][0-9]-stdiostrideblock
 [rw][0-9][0-9]-stdiostridebyte
 [rw][0-9][0-9]-strideblock

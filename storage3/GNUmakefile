@@ -1,5 +1,4 @@
-PROGRAMS = $(sort $(patsubst %.c,%,$(wildcard [rw][0-9]*.c))) \
-	coherence matrixmultiply base-matrixmultiply
+PROGRAMS = $(sort $(patsubst %.c,%,$(wildcard [rw][0-9]*.c))) coherence
 
 -include conf.mk
 ifndef DATAFILE
@@ -32,7 +31,7 @@ matrixmultiply: matrixmultiply.o
 base-matrixmultiply: base-matrixmultiply.o
 	$(CC) $(CFLAGS) $(O) -o $@ $^
 
-DATASIZE := $(shell wc -c $(DATAFILE) | awk '{ print $$1 }')
+DATASIZE := $(shell cat $(DATAFILE) 2>/dev/null | wc -c | awk '{ print $$1 }')
 DATADEP := $(shell if test $(DATASIZE) -lt 51200000; then echo always; fi)
 DATADEP_LARGE := $(shell if test $(DATASIZE) -lt 5120000000; then echo always; fi)
 
