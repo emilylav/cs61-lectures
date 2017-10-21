@@ -157,7 +157,7 @@ void process_init(proc* p, int flags);
 
 // program_load(p, programnumber)
 //    Load the code corresponding to program `programnumber` into the process
-//    `p` and set `p->p_registers.reg_eip` to its entry point.
+//    `p` and set `p->p_registers.reg_rip` to its entry point.
 //    Assumes memory for `p` is already allocated and mapped.
 //    Returns 0 on success and -1 on failure (e.g. out-of-memory).
 int program_load(proc* p, int programnumber);

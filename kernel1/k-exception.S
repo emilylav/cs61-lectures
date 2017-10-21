@@ -197,6 +197,3 @@ sys_int_handlers:
         .quad sys61_int_handler
         .quad sys62_int_handler
         .quad sys63_int_handler
-
-
-.section .note.GNU-stack,"",@progbits

@@ -26,8 +26,10 @@
 #define SECTORSIZE      512
 #define ELFHDR          ((elf_header*) 0x10000) // scratch space
 
-void boot_readsect(uintptr_t dst, uint32_t src_sect);
-void boot_readseg(uintptr_t dst, uint32_t src_sect, size_t filesz, size_t memsz);
+void boot(void) __attribute__((noreturn));
+static void boot_readsect(uintptr_t dst, uint32_t src_sect);
+static void boot_readseg(uintptr_t dst, uint32_t src_sect,
+                         size_t filesz, size_t memsz);
 
 
 // boot
@@ -36,8 +38,8 @@ void boot(void) {
     // read 1st page off disk (should include programs as well as header)
     // and check validity
     boot_readseg((uintptr_t) ELFHDR, 1, PAGESIZE, PAGESIZE);
-    if (ELFHDR->e_magic != ELF_MAGIC) {
-        return;
+    while (ELFHDR->e_magic != ELF_MAGIC) {
+        /* do nothing */
     }
 
     // load each program segment
@@ -49,9 +51,9 @@ void boot(void) {
     }
 
     // jump to the kernel
-    ((void (*) (void)) ((uint64_t)ELFHDR->e_entry))();
-
- loop: goto loop;
+    typedef void (*kernel_entry_t)(void) __attribute__((noreturn));
+    kernel_entry_t kernel_entry = (kernel_entry_t) ELFHDR->e_entry;
+    kernel_entry();
 }
 
 
@@ -60,8 +62,8 @@ void boot(void) {
 //    `src_sect`. Copies `filesz` bytes into memory at `dst` from sectors
 //    `src_sect` and up, then clears memory in the range
 //    `[dst+filesz, dst+memsz)`.
-void boot_readseg(uintptr_t ptr, uint32_t src_sect,
-                  size_t filesz, size_t memsz) {
+static void boot_readseg(uintptr_t ptr, uint32_t src_sect,
+                         size_t filesz, size_t memsz) {
     uintptr_t end_ptr = ptr + filesz;
     memsz += ptr;
 
@@ -82,7 +84,7 @@ void boot_readseg(uintptr_t ptr, uint32_t src_sect,
 
 // boot_waitdisk
 //    Wait for the disk to be ready.
-void boot_waitdisk(void) {
+static void boot_waitdisk(void) {
     // Wait until the ATA status register says ready (0x40 is on)
     // & not busy (0x80 is off)
     while ((inb(0x1F7) & 0xC0) != 0x40) {
@@ -93,7 +95,7 @@ void boot_waitdisk(void) {
 
 // boot_readsect(dst, src_sect)
 //    Read disk sector number `src_sect` into address `dst`.
-void boot_readsect(uintptr_t dst, uint32_t src_sect) {
+static void boot_readsect(uintptr_t dst, uint32_t src_sect) {
     // programmed I/O for "read sector"
     boot_waitdisk();
     outb(0x1F2, 1);             // send `count = 1` as an ATA argument

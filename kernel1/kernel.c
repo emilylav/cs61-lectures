@@ -47,7 +47,7 @@ void kernel(void) {
 
     for (pid_t i = 1; i <= 2; ++i) {
         // Load the process application code and data into memory,
-        // set up its %eip and %esp, and mark it runnable.
+        // set up its %rip and %rsp, and mark it runnable.
         process_init(&processes[i], PROCINIT_ALLOW_PROGRAMMED_IO);
         int r = program_load(&processes[i], i - 1);
         assert(r >= 0);

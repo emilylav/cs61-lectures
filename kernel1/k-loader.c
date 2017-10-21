@@ -25,7 +25,7 @@ static int program_load_segment(proc* p, const elf_program* ph,
 
 // program_load(p, programnumber)
 //    Load the code corresponding to program `programnumber` into the process
-//    `p` and set `p->p_registers.reg_eip` to its entry point.
+//    `p` and set `p->p_registers.reg_rip` to its entry point.
 //    Assumes memory for `p` is already allocated and mapped.
 //    Returns 0 on success and -1 on failure (e.g. out-of-memory).
 int program_load(proc* p, int programnumber) {
@@ -59,6 +59,7 @@ int program_load(proc* p, int programnumber) {
 //    Returns 0 on success and -1 on failure.
 static int program_load_segment(proc* p, const elf_program* ph,
                                 const uint8_t* src) {
+    (void) p;
     uintptr_t va = (uintptr_t) ph->p_va;
     uintptr_t end_file = va + ph->p_filesz, end_mem = va + ph->p_memsz;
     va &= ~(PAGESIZE - 1);                // round to page boundary

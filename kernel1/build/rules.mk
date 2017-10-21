@@ -3,7 +3,7 @@ comma = ,
 
 # Cross-compiler toolchain
 GCCPREFIX =
-CC      = $(GCCPREFIX)gcc
+CC      = $(GCCPREFIX)cc
 CXX     = $(GCCPREFIX)c++
 AS      = $(GCCPREFIX)as
 AR      = $(GCCPREFIX)ar
@@ -14,7 +14,7 @@ NM      = $(GCCPREFIX)nm
 STRIP   = $(GCCPREFIX)strip
 
 # Native commands
-HOSTCC  = gcc
+HOSTCC  = cc
 TAR     = tar
 PERL    = perl
 
