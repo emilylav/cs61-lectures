@@ -58,8 +58,9 @@ static inline void track(size_t nmemb, size_t sz, void* ptr) {
     } else if (sz == sizeof(fake_qemu_put_mouse_event) && nmemb == 1) {
         test_event = ptr;
         test_mode = 1;
-    } else
+    } else {
         test_mode = 0;
+    }
 }
 
 void* malloc(size_t sz) {
@@ -68,13 +69,15 @@ void* malloc(size_t sz) {
         next_calloc = dlsym(RTLD_NEXT, "calloc");
     }
 
-    if (test_mode == 2)
+    if (test_mode == 2) {
         check();
+    }
 
     void* ptr = next_malloc(sz);
 
-    if (test_mode >= 0)
+    if (test_mode >= 0) {
         track(1, sz, ptr);
+    }
     return ptr;
 }
 
@@ -85,12 +88,14 @@ void* calloc(size_t nmemb, size_t sz) {
         return __libc_calloc(nmemb, sz); /* avoid infinite regress */
     }
 
-    if (test_mode == 2)
+    if (test_mode == 2) {
         check();
+    }
 
     void* ptr = next_calloc(nmemb, sz);
 
-    if (test_mode >= 0)
+    if (test_mode >= 0) {
         track(1, sz, ptr);
+    }
     return ptr;
 }

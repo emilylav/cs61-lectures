@@ -58,7 +58,7 @@ $(OBJDIR)/kernel.full: $(KERNEL_OBJS) $(PROCESS_BINARIES) $(KERNEL_LINKER_FILES)
 $(PROCESS_BINARIES_FULL): \
 $(OBJDIR)/p-%.full: $(OBJDIR)/p-%.o $(PROCESS_LIB_OBJS) \
 		link/p-%.ld link/shared.ld
-	$(call link,-T link/p-$*.ld link/shared.ld -nostdlib -o $@ $< $(PROCESS_LIB_OBJS),LINK)
+	$(call link,-T link/p-$*.ld link/shared.ld -o $@ $< $(PROCESS_LIB_OBJS),LINK)
 
 $(OBJDIR)/%: $(OBJDIR)/%.full
 	$(call run,$(OBJDUMP) -S $< >$@.asm)
@@ -66,7 +66,7 @@ $(OBJDIR)/%: $(OBJDIR)/%.full
 	$(call run,$(OBJCOPY) -j .text -j .rodata -j .data -j .bss $<,STRIP,$@)
 
 $(OBJDIR)/bootsector: $(BOOT_OBJS) link/boot.ld link/shared.ld
-	$(call link,-T link/boot.ld link/shared.ld -nostdlib -o $@.full $(BOOT_OBJS),LINK)
+	$(call link,-T link/boot.ld link/shared.ld -o $@.full $(BOOT_OBJS),LINK)
 	$(call run,$(OBJDUMP) -S $@.full >$@.asm)
 	$(call run,$(NM) -n $@.full >$@.sym)
 	$(call run,$(OBJCOPY) -S -O binary -j .text $@.full $@)

@@ -90,8 +90,9 @@ int main(int argc, char *argv[]) {
 
     // Check for a partition
     if (argc >= 2 && strcmp(argv[1], "-p") == 0) {
-        if (argc < 3)
+        if (argc < 3) {
             usage();
+        }
         if ((diskfd = open(argv[2], O_RDWR)) < 0) {
             fprintf(stderr, "%s: %s\n", argv[2], strerror(errno));
             usage();
@@ -107,14 +108,16 @@ int main(int argc, char *argv[]) {
 
     // Check for multiboot option
     if (argc >= 2 && strcmp(argv[1], "-m") == 0) {
-        if (argc < 3)
+        if (argc < 3) {
             usage();
+        }
         do_multiboot(argv[2]);
     }
 
     // Read files
-    if (argc < 2)
+    if (argc < 2) {
         usage();
+    }
 
     // Read boot sector
     if (bootsector_special) {
@@ -135,8 +138,9 @@ int main(int argc, char *argv[]) {
 
         argc--;
         argv++;
-    } else
+    } else {
         nsectors = 0;
+    }
 
     // Read any succeeding files, then write them out
     memset(zerobuf, 0, 512);
@@ -242,15 +246,16 @@ int find_partition(off_t partition_sect, off_t extended_sect, int partoff) {
 
     // check for partition table magic number
     if ((uint8_t) buf[PTABLE_MAGIC_OFFSET] != PTABLE_MAGIC1
-        || (uint8_t) buf[PTABLE_MAGIC_OFFSET + 1] != PTABLE_MAGIC2)
+        || (uint8_t) buf[PTABLE_MAGIC_OFFSET + 1] != PTABLE_MAGIC2) {
         return 0;
+    }
 
     // search partition table
     ptable = (struct Partitiondesc*) (buf + PTABLE_OFFSET);
-    for (i = 0; i < 4; i++)
-        if (ptable[i].lba_length == 0)
+    for (i = 0; i < 4; i++) {
+        if (ptable[i].lba_length == 0) {
             /* ignore entry */;
-        else if (ptable[i].type == PTYPE_JOS_KERN) {
+        } else if (ptable[i].type == PTYPE_JOS_KERN) {
             // use this partition
             partition_sect += (off_t) ptable[i].lba_start;
             fprintf(stderr, "Using partition %d (start sector %ld, sector length %ld)\n", partoff + i + 1, (long) partition_sect, (long) ptable[i].lba_length);
@@ -265,11 +270,14 @@ int find_partition(off_t partition_sect, off_t extended_sect, int partoff) {
                    || ptable[i].type == PTYPE_W95_EXTENDED
                    || ptable[i].type == PTYPE_LINUX_EXTENDED) {
             off_t inner_sect = extended_sect;
-            if (!inner_sect)
+            if (!inner_sect) {
                 inner_sect = ptable[i].lba_start;
-            if ((r = find_partition(ptable[i].lba_start + extended_sect, inner_sect, (partoff ? partoff + 1 : 4))) > 0)
+            }
+            if ((r = find_partition(ptable[i].lba_start + extended_sect, inner_sect, (partoff ? partoff + 1 : 4))) > 0) {
                 return r;
+            }
         }
+    }
 
     // no partition number found
     return 0;

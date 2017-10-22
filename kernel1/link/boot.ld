@@ -7,7 +7,13 @@ SECTIONS {
 
     /* Text segment: instructions only.
        The boot loader must fit in 512 bytes; there are no globals. */
-    .text : { *(.text .stub .text.* .gnu.linkonce.t.*) }
+    .text : {
+        *(.text.unlikely .text.*_unlikely .text.unlikely.*)
+        *(.text.exit .text.exit.*)
+        *(.text.startup .text.startup.*)
+        *(.text.hot .text.hot.*)
+        *(.text .stub .text.* .gnu.linkonce.t.*)
+    }
 
     /DISCARD/ : { *(.eh_frame .note.GNU-stack) }
 }
