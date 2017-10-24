@@ -37,6 +37,7 @@ void run(proc* p) __attribute__((noreturn));
 void kernel(void) {
     hardware_init();
     console_clear();
+    timer_init(1000);
 
     // Set up process descriptors
     memset(processes, 0, sizeof(processes));
@@ -48,7 +49,7 @@ void kernel(void) {
     for (pid_t i = 1; i <= 2; ++i) {
         // Load the process application code and data into memory,
         // set up its %rip and %rsp, and mark it runnable.
-        process_init(&processes[i], PROCINIT_ALLOW_PROGRAMMED_IO);
+        process_init(&processes[i], 0);
         int r = program_load(&processes[i], i - 1);
         assert(r >= 0);
         processes[i].p_registers.reg_rsp = PROC_START_ADDR + PROC_SIZE * i;
@@ -96,6 +97,14 @@ void exception(x86_64_registers* reg) {
     case INT_SYS_YIELD:
         schedule();
         break;  /* will not be reached */
+
+    case INT_TIMER:
+        schedule();
+        break;
+
+    case INT_GPF:
+        current->p_state = P_BLOCKED;
+        break;
 
 
     case INT_SYS_READ_RAMDISK:
