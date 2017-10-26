@@ -6,8 +6,8 @@
 
 .text
 
-# The entry_from_boot routine sets the stack pointer to the top of the
-# OS kernel stack, then jumps to the `kernel` routine.
+# The entry_from_boot routine sets the stack pointer to the top
+# of the OS kernel stack, then jumps to the `kernel` routine.
 
 .globl entry_from_boot
 entry_from_boot:
@@ -15,7 +15,8 @@ entry_from_boot:
         movq %rsp, %rbp
         pushq $0
         popfq
-        // Check for multiboot command line; if found pass it along.
+        // Check for multiboot command line; if found pass it
+        // along.
         cmpl $0x2BADB002, %eax
         jne 1f
         testl $4, (%rbx)
@@ -178,7 +179,7 @@ exception_return:
         iretq
 
 
-        # An array of function pointers to the interrupt handlers.
+        # Array of function pointers to the exception handlers
         .globl sys_int_handlers
 sys_int_handlers:
         .quad sys48_int_handler

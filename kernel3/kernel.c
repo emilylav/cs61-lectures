@@ -21,9 +21,8 @@
 
 #define PROC_SIZE 0x40000
 
-static proc processes[NPROC];   // array of process descriptors
-                                // Note that `processes[0]` is never used.
-proc* current;                  // pointer to currently executing proc
+static proc processes[NPROC];      // array of process structures
+proc* current;             // pointer to currently executing proc
 
 static char ramdisk[16];        // memory representing a RAM disk
 
@@ -39,7 +38,7 @@ void kernel(void) {
     console_clear();
     timer_init(1000);
 
-    // Set up process descriptors
+    // Set up process structures
     memset(processes, 0, sizeof(processes));
     for (pid_t i = 0; i < NPROC; i++) {
         processes[i].p_pid = i;
@@ -47,12 +46,14 @@ void kernel(void) {
     }
 
     for (pid_t i = 1; i <= 2; ++i) {
-        // Load the process application code and data into memory,
-        // set up its %rip and %rsp, and mark it runnable.
+        // Load the process application code and data into
+        // memory, set up its %rip and %rsp, and mark it
+        // runnable.
         process_init(&processes[i], 0);
         int r = program_load(&processes[i], i - 1);
         assert(r >= 0);
-        processes[i].p_registers.reg_rsp = PROC_START_ADDR + PROC_SIZE * i;
+        processes[i].p_registers.reg_rsp =
+            PROC_START_ADDR + PROC_SIZE * i;
         processes[i].p_state = P_RUNNABLE;
     }
 
@@ -64,16 +65,19 @@ void kernel(void) {
 // exception(reg)
 //    Exception handler (for interrupts, traps, and faults).
 //
-//    The register values from exception time are stored in `reg`.
-//    The processor responds to an exception by saving application state on
-//    the kernel's stack, then jumping to kernel assembly code (in
-//    k-exception.S). That code saves more registers on the kernel's stack,
-//    then calls exception().
+//    The register values from exception time are stored in
+//    `reg`. The processor responds to an exception by saving
+//    application state on the kernel's stack, then jumping to
+//    kernel assembly code (in k-exception.S). That code saves
+//    more registers on the kernel's stack, then calls
+//    exception().
 //
-//    Note that hardware interrupts are disabled whenever the kernel is running.
+//    Note that hardware interrupts are disabled whenever the
+//    kernel is running.
 
 void exception(x86_64_registers* reg) {
-    // Copy the saved registers into the `current` process descriptor.
+    // Copy the saved registers into the `current` process
+    // structure.
     current->p_registers = *reg;
 
     // Show the current cursor location.
@@ -112,12 +116,8 @@ void exception(x86_64_registers* reg) {
         char* buf = (char*) current->p_registers.reg_rdi;
         uint32_t off = current->p_registers.reg_rsi;
         uint32_t sz = current->p_registers.reg_rdx;
-        // Check `off` and `sz`
-        if (off >= sizeof(ramdisk)
-            || off + sz > sizeof(ramdisk)
-            || off + sz < off) {
-            current->p_registers.reg_rax = (uint32_t) -1;
-        } else if (current->p_registers.reg_intno == INT_SYS_READ_RAMDISK) {
+        if (current->p_registers.reg_intno
+            == INT_SYS_READ_RAMDISK) {
             memcpy(buf, ramdisk + off, sz);
             current->p_registers.reg_rax = sz;
         } else {
@@ -162,8 +162,8 @@ void schedule(void) {
 
 
 // run(p)
-//    Run process `p`. This means reloading all the registers from
-//    `p->p_registers` using the `popal`, `popl`, and `iret` instructions.
+//    Run process `p`. This means reloading all the registers
+//    from `p->p_registers` using `pop` and `iret` instructions.
 //
 //    As a side effect, sets `current = p`.
 
@@ -171,13 +171,14 @@ void run(proc* p) {
     assert(p->p_state == P_RUNNABLE);
     current = p;
 
-    // Load the process's current pagetable, which is `kernel_pagetable`.
-    // Normally this is redundant, but it is necessary if the process's
-    // page table changed (e.g., `virtual_memory_map` was called).
+    // Load the process's current pagetable, which is
+    // `kernel_pagetable`. Normally this is redundant, but it is
+    // necessary if the process's page table changed (e.g.,
+    // `virtual_memory_map` was called).
     lcr3((uintptr_t) kernel_pagetable);
 
-    // This function is defined in k-exception.S. It restores the process's
-    // registers then jumps back to user mode.
+    // This function is defined in k-exception.S. It restores
+    // the process's registers then jumps back to user mode.
     exception_return(&p->p_registers);
 
  spinloop: goto spinloop;       // should never get here
