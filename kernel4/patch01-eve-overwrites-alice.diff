@@ -1,0 +1,16 @@
+diff --git a/kernel4/p-eve.c b/kernel4/p-eve.c
+index 5293044..7497f88 100644
+--- a/kernel4/p-eve.c
++++ b/kernel4/p-eve.c
+@@ -11,9 +11,8 @@ void process_main(void) {
+         }
+         if (i % 4096 == 0) {
+             app_printf(0, "EVE REKT\n");
+-            uint8_t* code_ptr = (uint8_t*) 0x40042;
+-            memcpy(code_ptr, "\xeb\xfe", 2);
+-            (void) sys_getpid();
++            uint8_t* code_ptr = (uint8_t*) 0x10000; // Alice's code
++            memset(code_ptr, 0, PAGESIZE);
+         }
+         sys_yield();
+     }

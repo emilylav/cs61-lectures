@@ -1,0 +1,82 @@
+diff --git a/kernel4/kernel.c b/kernel4/kernel.c
+index 501df5b..c302436 100644
+--- a/kernel4/kernel.c
++++ b/kernel4/kernel.c
+@@ -68,11 +68,56 @@ void kernel(const char* command) {
+     run(&processes[1]);
+ }
+ 
++x86_64_pagetable* allocator(void) {
++    // This variable keeps track of the next free page.
++    static uintptr_t next_free_page;
++    // Initialize it first time through.
++    if (next_free_page == 0) {
++        // `end` is a special symbol whose address is greater
++        // than the address of any kernel code or data.
++        next_free_page = ROUNDUP((uintptr_t) end, PAGESIZE);
++    }
++    // We shouldn't ever run into the kernel stack.
++    assert(next_free_page < KERNEL_STACK_TOP - PAGESIZE);
++
++    // Actually allocate the page!
++    x86_64_pagetable* p = (x86_64_pagetable*) next_free_page;
++    next_free_page += PAGESIZE;
++    return p;
++}
++
+ static void setup(int pid, int program_number) {
+     // Load the process application code and data into
+     // memory, set up its %rip and %rsp, and mark it
+     // runnable.
+     process_init(&processes[pid], 0);
++
++    // Make a new page table for the process. Allocate
++    // 3 pages to hold its code and data.
++    x86_64_pagetable* pt = allocator();
++    memset(pt, 0, PAGESIZE);
++    // 1. Kernel address space
++    virtual_memory_map(pt, 0, 0, PROC_START_ADDR,
++                       PTE_P | PTE_W, allocator);
++    // 2. Console
++    virtual_memory_map(pt, (uintptr_t) console, (uintptr_t) console, PAGESIZE,
++                       PTE_P | PTE_W | PTE_U, allocator);
++    // 3. Process code and data
++    uintptr_t loadaddr = program_get_load_address(program_number);
++    for (int i = 0; i < 3; ++i) {
++        uintptr_t pageaddr = loadaddr + i * PAGESIZE;
++        virtual_memory_map(pt, pageaddr, (uintptr_t) allocator(), PAGESIZE,
++                           PTE_P | PTE_W | PTE_U, allocator);
++    }
++    // 4. Process stack
++    virtual_memory_map(pt, PROC_START_ADDR + PROC_SIZE * pid - PAGESIZE,
++                       (uintptr_t) allocator(), PAGESIZE,
++                       PTE_P | PTE_W | PTE_U, allocator);
++    // Store the new pagetable in the process structure
++    processes[pid].p_pagetable = pt;
++    // and load it so its mappings are active in `program_load`.
++    lcr3((uintptr_t) pt);
++
+     int r = program_load(&processes[pid], program_number);
+     assert(r >= 0);
+     processes[pid].p_registers.reg_rsp =
+@@ -203,7 +248,7 @@ void run(proc* p) {
+     // `kernel_pagetable`. Normally this is redundant, but it is
+     // necessary if the process's page table changed (e.g.,
+     // `virtual_memory_map` was called).
+-    lcr3((uintptr_t) kernel_pagetable);
++    lcr3((uintptr_t) p->p_pagetable);
+ 
+     // This function is defined in k-exception.S. It restores
+     // the process's registers then jumps back to user mode.
+diff --git a/kernel4/kernel.h b/kernel4/kernel.h
+index 656b834..4170eed 100644
+--- a/kernel4/kernel.h
++++ b/kernel4/kernel.h
+@@ -22,6 +22,7 @@ typedef struct proc {
+     pid_t p_pid;                        // process ID
+     x86_64_registers p_registers;       // process's current registers
+     procstate_t p_state;                // process state (see above)
++    x86_64_pagetable* p_pagetable;      // process page table
+ } proc;
+ 
+ #define NPROC 16                // maximum number of processes
