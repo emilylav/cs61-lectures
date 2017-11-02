@@ -142,8 +142,8 @@ void exception(x86_64_registers* reg) {
     case INT_SYS_READ_RAMDISK:
     case INT_SYS_WRITE_RAMDISK: {
         char* buf = (char*) current->p_registers.reg_rdi;
-        uint32_t off = current->p_registers.reg_rsi;
-        uint32_t sz = current->p_registers.reg_rdx;
+        uintptr_t off = current->p_registers.reg_rsi;
+        uintptr_t sz = current->p_registers.reg_rdx;
         if (current->p_registers.reg_intno
             == INT_SYS_READ_RAMDISK) {
             memcpy(buf, ramdisk + off, sz);

@@ -52,7 +52,7 @@ static inline ssize_t sys_write_ramdisk(const void* buf,
                                         off_t off, size_t sz) {
     ssize_t result;
     asm volatile ("int %1" : "=a" (result)
-                  : "i" (INT_SYS_READ_RAMDISK),
+                  : "i" (INT_SYS_WRITE_RAMDISK),
                     "D" /* %rdi */ (buf),
                     "S" /* %rsi */ (off),
                     "d" /* %rdx */ (sz)
