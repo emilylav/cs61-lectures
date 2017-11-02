@@ -1,0 +1,24 @@
+diff --git a/kernel1/kernel.c b/kernel1/kernel.c
+index 63c4cb8..7df01d5 100644
+--- a/kernel1/kernel.c
++++ b/kernel1/kernel.c
+@@ -48,7 +48,7 @@ void kernel(void) {
+     for (pid_t i = 1; i <= 2; ++i) {
+         // Load the process application code and data into memory,
+         // set up its %rip and %rsp, and mark it runnable.
+-        process_init(&processes[i], PROCINIT_ALLOW_PROGRAMMED_IO);
++        process_init(&processes[i], 0);
+         int r = program_load(&processes[i], i - 1);
+         assert(r >= 0);
+         processes[i].p_registers.reg_rsp =
+@@ -105,6 +105,10 @@ void exception(x86_64_registers* reg) {
+         schedule();
+         break;
+ 
++    case INT_GPF:
++        current->p_state = P_BLOCKED;
++        break;
++
+ 
+     case INT_SYS_READ_RAMDISK:
+     case INT_SYS_WRITE_RAMDISK: {

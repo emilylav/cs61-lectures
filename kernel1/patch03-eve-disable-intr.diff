@@ -1,0 +1,12 @@
+diff --git a/kernel1/p-eve.c b/kernel1/p-eve.c
+index bba2adc..d0674a8 100644
+--- a/kernel1/p-eve.c
++++ b/kernel1/p-eve.c
+@@ -11,6 +11,7 @@ void process_main(void) {
+         }
+         if (i % 4096 == 0) {
+             app_printf(0, "EVE REKT\n");
++            cli();
+             while (1) {
+             }
+         }

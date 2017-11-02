@@ -1,0 +1,16 @@
+diff --git a/kernel1/p-eve.c b/kernel1/p-eve.c
+index eb7fd10..bba2adc 100644
+--- a/kernel1/p-eve.c
++++ b/kernel1/p-eve.c
+@@ -9,6 +9,11 @@ void process_main(void) {
+         if (i % 1024 == 0) {
+             app_printf(0, "Hi, I'm Eve! #%x\n", i);
+         }
++        if (i % 4096 == 0) {
++            app_printf(0, "EVE REKT\n");
++            while (1) {
++            }
++        }
+         sys_yield();
+     }
+ }

@@ -1,0 +1,23 @@
+diff --git a/kernel1/kernel.c b/kernel1/kernel.c
+index 6365a5b..63c4cb8 100644
+--- a/kernel1/kernel.c
++++ b/kernel1/kernel.c
+@@ -36,6 +36,7 @@ void run(proc* p) __attribute__((noreturn));
+ void kernel(void) {
+     hardware_init();
+     console_clear();
++    timer_init(1000);
+ 
+     // Set up process structures
+     memset(processes, 0, sizeof(processes));
+@@ -100,6 +101,10 @@ void exception(x86_64_registers* reg) {
+         schedule();
+         break;  /* will not be reached */
+ 
++    case INT_TIMER:
++        schedule();
++        break;
++
+ 
+     case INT_SYS_READ_RAMDISK:
+     case INT_SYS_WRITE_RAMDISK: {
